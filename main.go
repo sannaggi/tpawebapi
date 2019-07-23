@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -16,6 +17,11 @@ func CheckErr(err error) {
 
 func main() {
 
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "80"
+	}
+	fmt.Println(":" + port)
 	router := mux.NewRouter().StrictSlash(true)
 
 	router.HandleFunc("/api/places", placesIndex).Methods("GET")
@@ -23,5 +29,5 @@ func main() {
 	// router.HandleFunc("/api/places/{id}", Update).Methods("PATCH")
 	// router.HandleFunc("/api/places/{id}", Delete).Methods("DELETE")
 
-	log.Panic(http.ListenAndServe(":"+os.Getenv("PORT"), router))
+	log.Panic(http.ListenAndServe(":"+port, router))
 }

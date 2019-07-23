@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"fmt"
+	_ "fmt"
 
 	_ "go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -19,14 +19,14 @@ func (db *dbHandler) connect() *mongo.Client {
 
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 
-	fmt.Printf("%T", client)
+	// fmt.Printf("%T", client)
 
 	CheckErr(err)
 
 	err = client.Ping(context.TODO(), nil)
 	CheckErr(err)
 
-	fmt.Println("Connected to MongoDB!")
+	// fmt.Println("Connected to MongoDB!")
 
 	return client
 }
