@@ -36,3 +36,5 @@
 [[constraint]]
   name = "github.com/gorilla/mux"
   version = "1.7.3"
+
+metadata.heroku['root-package'] = github.com/xyon/aivbnbapi
