@@ -37,4 +37,9 @@
   name = "github.com/gorilla/mux"
   version = "1.7.3"
 
-metadata.heroku['root-package'] = github.com/xyon/aivbnbapi
+[metadata.heroku]
+  root-package = "aivbnbapi"
+  go-version = "go1.12.7"
+  install = ["./..."]
+  ensure = "false"
+  additional-tools = ["github.com/golang-migrate/migrate"]
