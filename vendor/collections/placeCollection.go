@@ -1,13 +1,18 @@
 package collections
 
+import (
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
+
 type Place struct {
-	Name          string   `json:"name"`
-	Price         int      `json:"price"`
-	Rating        []Review `json:"rating"`
-	Category      string   `json:"category"`
-	HostID        string   `json:"hostid"`
-	AverageRating float64  `json:"averagerating"`
-	RatingCount   int      `json:"ratingcount"`
+	ID            primitive.ObjectID `json:"id" bson:"_id,omitempty"`
+	Name          string             `json:"name"`
+	Price         int                `json:"price"`
+	Rating        []Review           `json:"rating"`
+	Category      string             `json:"category"`
+	HostID        string             `json:"hostid"`
+	AverageRating float64            `json:"averagerating"`
+	RatingCount   int                `json:"ratingcount"`
 }
 
 type Review struct {

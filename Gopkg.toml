@@ -43,3 +43,10 @@
   install = ["./..."]
   ensure = "false"
   additional-tools = ["github.com/golang-migrate/migrate"]
+[[constraint]]
+  branch = "v2"
+  name = "gopkg.in/mgo.v2"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/globalsign/mgo"
