@@ -13,6 +13,7 @@ type Place struct {
 	HostID        string             `json:"hostid"`
 	AverageRating float64            `json:"averagerating"`
 	RatingCount   int                `json:"ratingcount"`
+	Images 	[]string 	`json:"images"`
 }
 
 type Review struct {
