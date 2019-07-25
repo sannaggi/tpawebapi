@@ -24,7 +24,8 @@ func main() {
 	fmt.Println(":" + port)
 	router := mux.NewRouter().StrictSlash(true)
 
-	router.HandleFunc("/api/places", placesIndex).Methods("GET")
+	router.HandleFunc("/api/places", getPlaces).Methods("GET")
+	router.HandleFunc("/api/places/{id}", getPlace).Methods("GET")
 	// router.HandleFunc("/api/places", Store).Methods("POST")
 	// router.HandleFunc("/api/places/{id}", Update).Methods("PATCH")
 	// router.HandleFunc("/api/places/{id}", Delete).Methods("DELETE")

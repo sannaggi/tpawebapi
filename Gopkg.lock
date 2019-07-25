@@ -2,17 +2,6 @@
 
 
 [[projects]]
-  branch = "master"
-  digest = "1:7fb51688eadf38272411852d7a2b3538c7caff53309abee6c0964a83c00fe69e"
-  name = "github.com/globalsign/mgo"
-  packages = [
-    "bson",
-    "internal/json",
-  ]
-  pruneopts = "UT"
-  revision = "eeefdecb41b842af6dc652aaea4026e8403e62df"
-
-[[projects]]
   digest = "1:586ea76dbd0374d6fb649a91d70d652b7fe0ccffb8910a77468e7702e7901f3d"
   name = "github.com/go-stack/stack"
   packages = ["."]
@@ -122,15 +111,27 @@
   revision = "342b2e1fbaa52c93f31447ad2c6abc048c63e475"
   version = "v0.3.2"
 
+[[projects]]
+  branch = "v2"
+  digest = "1:2642fd0b6900c77247d61d80cf2eb59a374ef4ffc2d25a1b95b87dc355b2894e"
+  name = "gopkg.in/mgo.v2"
+  packages = [
+    "bson",
+    "internal/json",
+  ]
+  pruneopts = "UT"
+  revision = "9856a29383ce1c59f308dd1cf0363a79b5bef6b5"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/globalsign/mgo/bson",
     "github.com/gorilla/mux",
     "go.mongodb.org/mongo-driver/bson",
+    "go.mongodb.org/mongo-driver/bson/primitive",
     "go.mongodb.org/mongo-driver/mongo",
     "go.mongodb.org/mongo-driver/mongo/options",
+    "gopkg.in/mgo.v2/bson",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
