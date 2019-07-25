@@ -26,6 +26,8 @@ func main() {
 
 	router.HandleFunc("/api/places", getPlaces).Methods("GET")
 	router.HandleFunc("/api/places/{id}", getPlace).Methods("GET")
+	router.HandleFunc("/api/experiences", getExperiences).Methods("GET")
+	router.HandleFunc("/api/experiences/{id}", getExperience).Methods("GET")
 	// router.HandleFunc("/api/places", Store).Methods("POST")
 	// router.HandleFunc("/api/places/{id}", Update).Methods("PATCH")
 	// router.HandleFunc("/api/places/{id}", Delete).Methods("DELETE")
