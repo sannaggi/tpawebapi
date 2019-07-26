@@ -14,6 +14,8 @@ import (
 )
 
 func getPlaces(w http.ResponseWriter, r *http.Request) {
+	setupResponse(&w, r)
+
 	client := new(dbHandler).connect()
 	defer client.Disconnect(context.TODO())
 	w.Header().Set("content-type", "application/json")
@@ -34,6 +36,8 @@ func getPlaces(w http.ResponseWriter, r *http.Request) {
 }
 
 func getPlace(w http.ResponseWriter, r *http.Request) {
+	setupResponse(&w, r)
+
 	client := new(dbHandler).connect()
 	defer client.Disconnect(context.TODO())
 	w.Header().Set("content-type", "application/json")

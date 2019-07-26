@@ -14,6 +14,8 @@ import (
 )
 
 func getExperiences(w http.ResponseWriter, r *http.Request) {
+	setupResponse(&w, r)
+
 	client := new(dbHandler).connect()
 	defer client.Disconnect(context.TODO())
 	w.Header().Set("content-type", "application/json")
@@ -34,6 +36,8 @@ func getExperiences(w http.ResponseWriter, r *http.Request) {
 }
 
 func getExperience(w http.ResponseWriter, r *http.Request) {
+	setupResponse(&w, r)
+
 	client := new(dbHandler).connect()
 	defer client.Disconnect(context.TODO())
 	w.Header().Set("content-type", "application/json")
