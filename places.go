@@ -4,7 +4,6 @@ import (
 	c "collections"
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -13,12 +12,9 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func getPlaces(w http.ResponseWriter, r *http.Request) {
-	setupResponse(&w, r)
-
+func getPlacesFromDb() []c.Place {
 	client := new(dbHandler).connect()
 	defer client.Disconnect(context.TODO())
-	w.Header().Set("content-type", "application/json")
 
 	var places []c.Place
 
@@ -32,7 +28,43 @@ func getPlaces(w http.ResponseWriter, r *http.Request) {
 		cursor.Decode(&place)
 		places = append(places, place)
 	}
-	json.NewEncoder(w).Encode(places)
+
+	return places
+}
+
+func getPlaces(w http.ResponseWriter, r *http.Request) {
+	setupResponse(&w, r)
+	w.Header().Set("content-type", "application/json")
+	json.NewEncoder(w).Encode(getPlacesFromDb())
+}
+
+func searchPlaceByName(query string) []data {
+	client := new(dbHandler).connect()
+	defer client.Disconnect(context.TODO())
+
+	collection := client.Database("tpaweb").Collection("places")
+	cursor, err := collection.Find(context.Background(), bson.M{"name": bson.M{"$regex": query, "$options": "i"}})
+	CheckErr(err)
+	defer cursor.Close(context.TODO())
+
+	var datas []data
+
+	for cursor.Next(context.TODO()) {
+		var place c.Place
+		cursor.Decode(&place)
+		datas = append(datas, data{
+			place.ID,
+			"place",
+			place.Name,
+			place.Price,
+			place.Category,
+			place.AverageRating,
+			place.RatingCount,
+			place.Images[0],
+		})
+	}
+
+	return datas
 }
 
 func getPlace(w http.ResponseWriter, r *http.Request) {
@@ -49,8 +81,6 @@ func getPlace(w http.ResponseWriter, r *http.Request) {
 
 	id, err := primitive.ObjectIDFromHex(params["id"])
 	CheckErr(err)
-
-	fmt.Println(id)
 
 	err = collection.FindOne(context.Background(), bson.M{"_id": id}).Decode(&place)
 	CheckErr(err)

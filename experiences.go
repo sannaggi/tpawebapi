@@ -13,12 +13,9 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func getExperiences(w http.ResponseWriter, r *http.Request) {
-	setupResponse(&w, r)
-
+func getExperiencesFromDb() []c.Experience {
 	client := new(dbHandler).connect()
 	defer client.Disconnect(context.TODO())
-	w.Header().Set("content-type", "application/json")
 
 	var experiences []c.Experience
 
@@ -32,7 +29,42 @@ func getExperiences(w http.ResponseWriter, r *http.Request) {
 		cursor.Decode(&experience)
 		experiences = append(experiences, experience)
 	}
-	json.NewEncoder(w).Encode(experiences)
+	return experiences
+}
+
+func getExperiences(w http.ResponseWriter, r *http.Request) {
+	setupResponse(&w, r)
+	w.Header().Set("content-type", "application/json")
+	json.NewEncoder(w).Encode(getExperiencesFromDb())
+}
+
+func searchExperienceByName(query string) []data {
+	client := new(dbHandler).connect()
+	defer client.Disconnect(context.TODO())
+
+	collection := client.Database("tpaweb").Collection("experience")
+	cursor, err := collection.Find(context.Background(), bson.M{"name": bson.M{"$regex": query, "$options": "i"}})
+	CheckErr(err)
+	defer cursor.Close(context.TODO())
+
+	var datas []data
+
+	for cursor.Next(context.TODO()) {
+		var experience c.Experience
+		cursor.Decode(&experience)
+		datas = append(datas, data{
+			experience.ID,
+			"experience",
+			experience.Name,
+			experience.Price,
+			experience.Category,
+			experience.AverageRating,
+			experience.TotalRating,
+			experience.HeaderImage,
+		})
+	}
+
+	return datas
 }
 
 func getExperience(w http.ResponseWriter, r *http.Request) {
