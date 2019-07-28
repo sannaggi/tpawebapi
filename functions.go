@@ -25,6 +25,8 @@ type kv struct {
 }
 
 func getSearchResults(w http.ResponseWriter, r *http.Request) {
+	setupResponse(&w, r)
+	
 	params := mux.Vars(r)
 	query := params["query"]
 
