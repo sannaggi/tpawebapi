@@ -37,7 +37,7 @@ func getSearchResults(w http.ResponseWriter, r *http.Request) {
 	results = append(results, searchExperienceByName(query)...)
 
 	sort.Slice(results, func(i, j int) bool {
-		return strings.Index(results[i].Name, query) < strings.Index(results[j].Name, query)
+		return strings.Index(strings.ToLower(results[i].Name), strings.ToLower(query)) < strings.Index(strings.ToLower(results[j].Name), strings.ToLower(query))
 	})
 
 	if len(results) > 5 {
