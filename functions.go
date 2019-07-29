@@ -3,6 +3,8 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+	"sort"
+	"strings"
 
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -26,13 +28,17 @@ type kv struct {
 
 func getSearchResults(w http.ResponseWriter, r *http.Request) {
 	setupResponse(&w, r)
-	
+
 	params := mux.Vars(r)
 	query := params["query"]
 
 	var results []data
 	results = append(results, searchPlaceByName(query)...)
 	results = append(results, searchExperienceByName(query)...)
+
+	sort.Slice(results, func(i, j int) bool {
+		return strings.Index(results[i].Name, query) < strings.Index(results[j].Name, query)
+	})
 
 	if len(results) > 5 {
 		results = results[0:5]
