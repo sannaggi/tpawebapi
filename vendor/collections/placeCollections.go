@@ -14,4 +14,8 @@ type Place struct {
 	AverageRating float64            `json:"averagerating"`
 	RatingCount   int                `json:"ratingcount"`
 	Images        []string           `json:"images"`
+	Guests        int                `json:"guests"`
+	Bedrooms      int                `json:"bedrooms"`
+	Beds          int                `json:"beds"`
+	Baths         int                `json:"baths"`
 }
