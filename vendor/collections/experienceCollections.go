@@ -23,14 +23,3 @@ type Experience struct {
 	AboutHost     string             `json:"abouthost"`
 	Requirement   []string           `json:"Requirement"`
 }
-
-type ReviewDetail struct {
-	UserID string  `json:"userid"`
-	Review string  `json:"review"`
-	Rating float64 `json:"rating"`
-}
-
-type Amenity struct {
-	Type   string `json:"type"`
-	Detail string `json:"detail"`
-}

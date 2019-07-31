@@ -18,4 +18,5 @@ type Place struct {
 	Bedrooms      int                `json:"bedrooms"`
 	Beds          int                `json:"beds"`
 	Baths         int                `json:"baths"`
+	Location      Position           `json:"location"`
 }
