@@ -75,11 +75,10 @@ type category struct {
 }
 
 func searchExperienceByCategories(w http.ResponseWriter, r *http.Request) {
-	setupResponse(&w, r)
-
 	client := new(dbHandler).connect()
 	defer client.Disconnect(context.TODO())
 	w.Header().Set("content-type", "application/json")
+	setupResponse(&w, r)
 
 	var cat category
 	json.NewDecoder(r.Body).Decode(&cat)
