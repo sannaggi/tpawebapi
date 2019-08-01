@@ -67,6 +67,26 @@ func searchExperienceByName(query string) []data {
 	return datas
 }
 
+type category struct {
+	Guests     int      `json:"guests"`
+	Lowerprice int      `json:lowerprice`
+	Upperprice int      `json:upperprice`
+	Language   []string `json:"language"`
+}
+
+func searchExperienceByCategories(w http.ResponseWriter, r *http.Request) {
+	setupResponse(&w, r)
+
+	client := new(dbHandler).connect()
+	defer client.Disconnect(context.TODO())
+	w.Header().Set("content-type", "application/json")
+
+	var experiences []c.Experience
+
+	collection := client.Database("tpaweb").Collection("experience")
+	cursor, err := collection.Find(context.Background(), "")
+}
+
 func getExperience(w http.ResponseWriter, r *http.Request) {
 	setupResponse(&w, r)
 
