@@ -69,9 +69,9 @@ func searchExperienceByName(query string) []data {
 
 type category struct {
 	Guests     int      `json:"guests"`
-	Lowerprice int      `json:lowerprice`
-	Upperprice int      `json:upperprice`
-	Language   []string `json:"language"`
+	Lowerprice int      `json:"lowerprice"`
+	Upperprice int      `json:"upperprice"`
+	Languages  []string `json:"language"`
 }
 
 func searchExperienceByCategories(w http.ResponseWriter, r *http.Request) {
@@ -81,10 +81,25 @@ func searchExperienceByCategories(w http.ResponseWriter, r *http.Request) {
 	defer client.Disconnect(context.TODO())
 	w.Header().Set("content-type", "application/json")
 
+	var cat category
+	json.NewDecoder(r.Body).Decode(&cat)
+
 	var experiences []c.Experience
 
+	var languages []string
+	for _, language := range cat.Languages {
+		languages = append(languages, language)
+	}
 	collection := client.Database("tpaweb").Collection("experience")
-	cursor, err := collection.Find(context.Background(), "")
+	cursor, err := collection.Find(context.Background(), bson.M{"guests": bson.M{"$gte": cat.Guests}, "price": bson.M{"$gte": cat.Lowerprice, "$lte": cat.Upperprice}, "languages": bson.M{"$in": languages}})
+	CheckErr(err)
+
+	for cursor.Next(context.TODO()) {
+		var experience c.Experience
+		cursor.Decode(&experience)
+		experiences = append(experiences, experience)
+	}
+	json.NewEncoder(w).Encode(experiences)
 }
 
 func getExperience(w http.ResponseWriter, r *http.Request) {

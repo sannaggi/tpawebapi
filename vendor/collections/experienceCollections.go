@@ -23,4 +23,5 @@ type Experience struct {
 	AboutHost     string             `json:"abouthost"`
 	Requirement   []string           `json:"requirement"`
 	Guests        int                `json:"guests"`
+	Languages     []string           `json:"languages"`
 }
