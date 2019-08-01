@@ -21,5 +21,6 @@ type Experience struct {
 	Detail        string             `json:"detail"`
 	Gallery       []string           `json:"gallery"`
 	AboutHost     string             `json:"abouthost"`
-	Requirement   []string           `json:"Requirement"`
+	Requirement   []string           `json:"requirement"`
+	Guests        int                `json:"guests"`
 }
