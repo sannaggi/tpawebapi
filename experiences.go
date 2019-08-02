@@ -71,20 +71,19 @@ type category struct {
 	Guests     int      `json:"guests"`
 	Lowerprice int      `json:"lowerprice"`
 	Upperprice int      `json:"upperprice"`
-	Languages  []string `json:"language"`
+	Languages  []string `json:"languages"`
 }
 
 func searchExperienceByCategories(w http.ResponseWriter, r *http.Request) {
-	client := new(dbHandler).connect()
-	defer client.Disconnect(context.TODO())
 	w.Header().Set("content-type", "application/json")
 	setupResponse(&w, r)
+	client := new(dbHandler).connect()
+	defer client.Disconnect(context.TODO())
 
 	var cat category
 	json.NewDecoder(r.Body).Decode(&cat)
 
 	var experiences []c.Experience
-
 	var languages []string
 	for _, language := range cat.Languages {
 		languages = append(languages, language)
