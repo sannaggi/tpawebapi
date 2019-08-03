@@ -14,7 +14,7 @@ type data struct {
 	ID            primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	Type          string             `json:"type"`
 	Name          string             `json:"name"`
-	Price         int                `json:"price"`
+	Price         float64            `json:"price"`
 	Category      string             `json:"category"`
 	AverageRating float64            `json:"averagerating"`
 	RatingCount   int                `json:"ratingcount"`

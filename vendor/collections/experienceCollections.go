@@ -7,7 +7,7 @@ import (
 type Experience struct {
 	ID            primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	Name          string             `json:"name"`
-	Price         int                `json:"price"`
+	Price         float64			 `json:"price"`
 	Review        []ReviewDetail     `json:"rating"`
 	Category      string             `json:"category"`
 	HostID        string             `json:"hostid"`

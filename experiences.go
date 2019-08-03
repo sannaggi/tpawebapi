@@ -69,8 +69,8 @@ func searchExperienceByName(query string) []data {
 
 type category struct {
 	Guests     int      `json:"guests"`
-	Lowerprice int      `json:"lowerprice"`
-	Upperprice int      `json:"upperprice"`
+	Lowerprice float64  `json:"lowerprice"`
+	Upperprice float64  `json:"upperprice"`
 	Languages  []string `json:"languages"`
 }
 
