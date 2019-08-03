@@ -37,6 +37,7 @@ func main() {
 	router.HandleFunc("/api/experiences/{id}", getExperience).Methods("GET")
 	router.HandleFunc("/api/search/{query}", getSearchResults).Methods("GET")
 	router.HandleFunc("/api/experiences/search", searchExperienceByCategories).Methods("POST")
+	router.HandleFunc("/api/experiences/s", fetchLimitedExperiences).Methods("POST")
 
 	log.Panic(http.ListenAndServe(":"+port, router))
 }

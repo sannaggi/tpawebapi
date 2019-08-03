@@ -122,3 +122,30 @@ func getExperience(w http.ResponseWriter, r *http.Request) {
 
 	json.NewEncoder(w).Encode(experience)
 }
+
+type limitation struct {
+	Skip  int `json:"skip"`
+	Limit int `json:"limit"`
+}
+
+func fetchLimitedExperiences(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-type", "application/json")
+	setupResponse(&w, r)
+	client := new(dbHandler).connect()
+	defer client.Disconnect(context.TODO())
+
+	var lim limitation
+	json.NewDecoder(r.Body).Decode(&lim)
+
+	var experiences []c.Experience
+	collection := client.Database("tpaweb").Collection("experience")
+	cursor, err := collection.Aggregate(context.Background(), []bson.M{bson.M{"$skip": lim.Skip}, bson.M{"$limit": lim.Limit}})
+	CheckErr(err)
+
+	for cursor.Next(context.TODO()) {
+		var experience c.Experience
+		cursor.Decode(&experience)
+		experiences = append(experiences, experience)
+	}
+	json.NewEncoder(w).Encode(experiences)
+}
