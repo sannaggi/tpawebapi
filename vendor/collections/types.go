@@ -6,6 +6,11 @@ type ReviewDetail struct {
 	Rating float64 `json:"rating"`
 }
 
+type BasicReview struct {
+	UserID string  `json:"userid"`
+	Review string  `json:"review"`
+}
+
 type Amenity struct {
 	Type   string `json:"type"`
 	Detail string `json:"detail"`
