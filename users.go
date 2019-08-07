@@ -61,7 +61,6 @@ func createNewUser(w http.ResponseWriter, r *http.Request) {
 
 	collection := client.Database("tpaweb").Collection("user")
 
-	inserted, err := collection.InsertOne(context.Background(), user)
+	_, err := collection.InsertOne(context.Background(), user)
 	CheckErr(err)
-	json.NewEncoder(w).Encode(inserted)
 }
