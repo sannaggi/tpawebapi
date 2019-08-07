@@ -47,3 +47,21 @@ func loginOauth2(w http.ResponseWriter, r *http.Request) {
 
 	json.NewEncoder(w).Encode(tokenString)
 }
+
+func createNewUser(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-type", "application/json")
+	setupResponse(&w, r)
+	client := new(dbHandler).connect()
+	defer client.Disconnect(context.TODO())
+
+	var user c.User
+	json.NewDecoder(r.Body).Decode(&user)
+
+	user.Description = "Hi there! I'm using aivbnb"
+
+	collection := client.Database("tpaweb").Collection("user")
+
+	inserted, err := collection.InsertOne(context.Background(), user)
+	CheckErr(err)
+	json.NewEncoder(w).Encode(inserted)
+}
