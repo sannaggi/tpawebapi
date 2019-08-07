@@ -4,6 +4,7 @@ import (
 	c "collections"
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	j "github.com/dgrijalva/jwt-go"
@@ -39,6 +40,7 @@ func loginOauth2(w http.ResponseWriter, r *http.Request) {
 	collection := client.Database("tpaweb").Collection("user")
 
 	err := collection.FindOne(context.Background(), bson.M{oauth.Authenticator: oauth.ID}).Decode(&user)
+	CheckErr(err)
 	if err != nil {
 		json.NewEncoder(w).Encode(user)
 	}
@@ -54,13 +56,28 @@ func createNewUser(w http.ResponseWriter, r *http.Request) {
 	client := new(dbHandler).connect()
 	defer client.Disconnect(context.TODO())
 
-	var user c.User
-	json.NewDecoder(r.Body).Decode(&user)
-
-	user.Description = "Hi there! I'm using aivbnb"
-
 	collection := client.Database("tpaweb").Collection("user")
 
-	_, err := collection.InsertOne(context.Background(), user)
-	CheckErr(err)
+	var user c.User
+	var err error
+
+	json.NewDecoder(r.Body).Decode(&user)
+	if user.FacebookID != "" {
+		fmt.Println(user.FacebookID)
+		err = collection.FindOne(context.Background(), bson.M{"facebookid": user.FacebookID}).Decode(&user)
+	} else {
+		err = collection.FindOne(context.Background(), bson.M{"googleid": user.GoogleID}).Decode(&user)
+	}
+
+	if err == nil {
+		return
+	}
+
+	if err.Error() == "mongo: no documents in result" {
+		user.Description = "Hi there! I'm using aivbnb"
+
+		_, err = collection.InsertOne(context.Background(), user)
+		CheckErr(err)
+	}
+
 }
