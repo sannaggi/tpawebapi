@@ -16,6 +16,10 @@ type oauth struct {
 	Authenticator string `json:"authenticator"`
 }
 
+type regResponse struct {
+	Result bool `json:"result"`
+}
+
 func generateToken(user c.User) string {
 	token := j.New(j.SigningMethodHS256)
 	claims := token.Claims.(j.MapClaims)
@@ -39,8 +43,8 @@ func loginOauth2(w http.ResponseWriter, r *http.Request) {
 	var user c.User
 	collection := client.Database("tpaweb").Collection("user")
 
+	fmt.Println(oauth.ID)
 	err := collection.FindOne(context.Background(), bson.M{oauth.Authenticator: oauth.ID}).Decode(&user)
-	CheckErr(err)
 	if err != nil {
 		json.NewEncoder(w).Encode(user)
 	}
@@ -48,6 +52,31 @@ func loginOauth2(w http.ResponseWriter, r *http.Request) {
 	tokenString := generateToken(user)
 
 	json.NewEncoder(w).Encode(tokenString)
+}
+
+func checkNewUser(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-type", "application/json")
+	setupResponse(&w, r)
+	client := new(dbHandler).connect()
+	defer client.Disconnect(context.TODO())
+
+	collection := client.Database("tpaweb").Collection("user")
+
+	var user c.User
+	var err error
+
+	json.NewDecoder(r.Body).Decode(&user)
+	if user.FacebookID != "" {
+		err = collection.FindOne(context.Background(), bson.M{"facebookid": user.FacebookID}).Decode(&user)
+	} else {
+		err = collection.FindOne(context.Background(), bson.M{"googleid": user.GoogleID}).Decode(&user)
+	}
+
+	if err == nil {
+		json.NewEncoder(w).Encode(false)
+	} else if err.Error() == "mongo: no documents in result" {
+		json.NewEncoder(w).Encode(true)
+	}
 }
 
 func createNewUser(w http.ResponseWriter, r *http.Request) {
@@ -62,22 +91,9 @@ func createNewUser(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	json.NewDecoder(r.Body).Decode(&user)
-	if user.FacebookID != "" {
-		fmt.Println(user.FacebookID)
-		err = collection.FindOne(context.Background(), bson.M{"facebookid": user.FacebookID}).Decode(&user)
-	} else {
-		err = collection.FindOne(context.Background(), bson.M{"googleid": user.GoogleID}).Decode(&user)
-	}
 
-	if err == nil {
-		return
-	}
+	user.Description = "Hi there! I'm using aivbnb"
 
-	if err.Error() == "mongo: no documents in result" {
-		user.Description = "Hi there! I'm using aivbnb"
-
-		_, err = collection.InsertOne(context.Background(), user)
-		CheckErr(err)
-	}
-
+	_, err = collection.InsertOne(context.Background(), user)
+	CheckErr(err)
 }
