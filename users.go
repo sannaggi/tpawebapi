@@ -99,19 +99,23 @@ func createNewUser(w http.ResponseWriter, r *http.Request) {
 	CheckErr(err)
 }
 
+type loginRequest struct {
+	ID	string	`json:"id"`
+}
+
 func cookieLogin(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
 	setupResponse(&w, r)
 	client := new(dbHandler).connect()
 	defer client.Disconnect(context.TODO())
 
-	var reqID string
+	var reqID loginRequest
 	json.NewDecoder(r.Body).Decode(&reqID)
 
 	var user c.User
 	collection := client.Database("tpaweb").Collection("user")
 
-	id, err := primitive.ObjectIDFromHex(reqID)
+	id, err := primitive.ObjectIDFromHex(reqID.ID)
 	CheckErr(err)
 
 	err = collection.FindOne(context.Background(), bson.M{"_id": id}).Decode(&user)
