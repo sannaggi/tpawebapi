@@ -9,6 +9,7 @@ import (
 
 	j "github.com/dgrijalva/jwt-go"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type oauth struct {
@@ -96,4 +97,29 @@ func createNewUser(w http.ResponseWriter, r *http.Request) {
 
 	_, err = collection.InsertOne(context.Background(), user)
 	CheckErr(err)
+}
+
+func cookieLogin(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-type", "application/json")
+	setupResponse(&w, r)
+	client := new(dbHandler).connect()
+	defer client.Disconnect(context.TODO())
+
+	var reqID string
+	json.NewDecoder(r.Body).Decode(&reqID)
+
+	var user c.User
+	collection := client.Database("tpaweb").Collection("user")
+
+	id, err := primitive.ObjectIDFromHex(reqID)
+	CheckErr(err)
+
+	err = collection.FindOne(context.Background(), bson.M{"_id": id}).Decode(&user)
+	if err != nil {
+		json.NewEncoder(w).Encode(user)
+	}
+
+	tokenString := generateToken(user)
+
+	json.NewEncoder(w).Encode(tokenString)
 }

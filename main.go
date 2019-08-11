@@ -39,6 +39,7 @@ func main() {
 	router.HandleFunc("/api/experiences/search", searchExperienceByCategories).Methods("POST")
 	router.HandleFunc("/api/experiences/s", fetchLimitedExperiences).Methods("POST")
 	router.HandleFunc("/api/login/o", loginOauth2).Methods("POST")
+	router.HandleFunc("/api/login/c", cookieLogin).Methods("POST")
 	router.HandleFunc("/api/users/", createNewUser).Methods("POST")
 	router.HandleFunc("/api/users/check", checkNewUser).Methods("POST")
 
