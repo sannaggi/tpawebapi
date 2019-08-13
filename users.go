@@ -20,6 +20,15 @@ type regResponse struct {
 	Result bool `json:"result"`
 }
 
+type loginRequest struct {
+	ID string `json:"id"`
+}
+
+type emailLoginRequest struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 func generateToken(user c.User) string {
 	token := j.New(j.SigningMethodHS256)
 	claims := token.Claims.(j.MapClaims)
@@ -29,6 +38,28 @@ func generateToken(user c.User) string {
 	CheckErr(err)
 
 	return tokenString
+}
+
+func emailLogin(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-type", "application/json")
+	setupResponse(&w, r)
+	client := new(dbHandler).connect()
+	defer client.Disconnect(context.TODO())
+
+	var req emailLoginRequest
+	json.NewDecoder(r.Body).Decode(&req)
+	var user c.User
+	collection := client.Database("tpaweb").Collection("user")
+
+	err := collection.FindOne(context.Background(), bson.M{"email": req.Email, "password": req.Password}).Decode(&user)
+	if err != nil {
+		json.NewEncoder(w).Encode(nil)
+		return
+	}
+
+	tokenString := generateToken(user)
+
+	json.NewEncoder(w).Encode(tokenString)
 }
 
 func loginOauth2(w http.ResponseWriter, r *http.Request) {
@@ -45,7 +76,8 @@ func loginOauth2(w http.ResponseWriter, r *http.Request) {
 
 	err := collection.FindOne(context.Background(), bson.M{oauth.Authenticator: oauth.ID}).Decode(&user)
 	if err != nil {
-		json.NewEncoder(w).Encode(user)
+		json.NewEncoder(w).Encode(nil)
+		return
 	}
 
 	tokenString := generateToken(user)
@@ -99,10 +131,6 @@ func createNewUser(w http.ResponseWriter, r *http.Request) {
 	CheckErr(err)
 }
 
-type loginRequest struct {
-	ID string `json:"id"`
-}
-
 func cookieLogin(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
 	setupResponse(&w, r)
@@ -120,7 +148,8 @@ func cookieLogin(w http.ResponseWriter, r *http.Request) {
 
 	err = collection.FindOne(context.Background(), bson.M{"_id": id}).Decode(&user)
 	if err != nil {
-		json.NewEncoder(w).Encode(user)
+		json.NewEncoder(w).Encode(nil)
+		return
 	}
 
 	tokenString := generateToken(user)
