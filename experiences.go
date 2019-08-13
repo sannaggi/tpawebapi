@@ -149,3 +149,22 @@ func fetchLimitedExperiences(w http.ResponseWriter, r *http.Request) {
 	}
 	json.NewEncoder(w).Encode(experiences)
 }
+
+func fetchRecommendedExperiences(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-type", "application/json")
+	setupResponse(&w, r)
+	client := new(dbHandler).connect()
+	defer client.Disconnect(context.TODO())
+
+	var experiences []c.Experience
+	collection := client.Database("tpaweb").Collection("experience")
+	cursor, err := collection.Aggregate(context.Background(), []bson.M{bson.M{"$sort": bson.M{"averagerating": -1}}, bson.M{"$limit": 6}})
+	CheckErr(err)
+
+	for cursor.Next(context.TODO()) {
+		var experience c.Experience
+		cursor.Decode(&experience)
+		experiences = append(experiences, experience)
+	}
+	json.NewEncoder(w).Encode(experiences)
+}

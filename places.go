@@ -38,6 +38,25 @@ func getPlaces(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(getPlacesFromDb())
 }
 
+func fetchRecommendedPlaces(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-type", "application/json")
+	setupResponse(&w, r)
+	client := new(dbHandler).connect()
+	defer client.Disconnect(context.TODO())
+
+	var places []c.Place
+	collection := client.Database("tpaweb").Collection("places")
+	cursor, err := collection.Aggregate(context.Background(), []bson.M{bson.M{"$sort": bson.M{"averagerating": -1}}, bson.M{"$limit": 8}})
+	CheckErr(err)
+
+	for cursor.Next(context.TODO()) {
+		var place c.Place
+		cursor.Decode(&place)
+		places = append(places, place)
+	}
+	json.NewEncoder(w).Encode(places)
+}
+
 func searchPlaceByName(query string) []data {
 	client := new(dbHandler).connect()
 	defer client.Disconnect(context.TODO())

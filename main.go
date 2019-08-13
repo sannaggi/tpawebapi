@@ -32,8 +32,10 @@ func main() {
 	router := mux.NewRouter().StrictSlash(true)
 
 	router.HandleFunc("/api/places", getPlaces).Methods("GET")
+	router.HandleFunc("/api/places/recommended", fetchRecommendedPlaces).Methods("GET")
 	router.HandleFunc("/api/places/{id}", getPlace).Methods("GET")
 	router.HandleFunc("/api/experiences", getExperiences).Methods("GET")
+	router.HandleFunc("/api/experiences/recommended", fetchRecommendedExperiences).Methods("GET")
 	router.HandleFunc("/api/experiences/{id}", getExperience).Methods("GET")
 	router.HandleFunc("/api/search/{query}", getSearchResults).Methods("GET")
 	router.HandleFunc("/api/experiences/search", searchExperienceByCategories).Methods("POST")
