@@ -4,7 +4,6 @@ import (
 	c "collections"
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	j "github.com/dgrijalva/jwt-go"
