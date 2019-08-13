@@ -46,7 +46,7 @@ func fetchRecommendedPlaces(w http.ResponseWriter, r *http.Request) {
 
 	var places []c.Place
 	collection := client.Database("tpaweb").Collection("places")
-	cursor, err := collection.Aggregate(context.Background(), []bson.M{bson.M{"$sort": bson.M{"averagerating": -1}}, bson.M{"$limit": 8}})
+	cursor, err := collection.Aggregate(context.Background(), []bson.M{bson.M{"$sort": bson.M{"averagerating": -1, "ratingcount": -1}}, bson.M{"$limit": 8}})
 	CheckErr(err)
 
 	for cursor.Next(context.TODO()) {

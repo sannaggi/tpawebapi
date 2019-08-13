@@ -158,7 +158,7 @@ func fetchRecommendedExperiences(w http.ResponseWriter, r *http.Request) {
 
 	var experiences []c.Experience
 	collection := client.Database("tpaweb").Collection("experience")
-	cursor, err := collection.Aggregate(context.Background(), []bson.M{bson.M{"$sort": bson.M{"averagerating": -1}}, bson.M{"$limit": 6}})
+	cursor, err := collection.Aggregate(context.Background(), []bson.M{bson.M{"$sort": bson.M{"averagerating": -1, "ratingcount": -1}}, bson.M{"$limit": 6}})
 	CheckErr(err)
 
 	for cursor.Next(context.TODO()) {
