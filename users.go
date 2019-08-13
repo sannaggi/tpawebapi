@@ -44,7 +44,6 @@ func loginOauth2(w http.ResponseWriter, r *http.Request) {
 	var user c.User
 	collection := client.Database("tpaweb").Collection("user")
 
-	fmt.Println(oauth.ID)
 	err := collection.FindOne(context.Background(), bson.M{oauth.Authenticator: oauth.ID}).Decode(&user)
 	if err != nil {
 		json.NewEncoder(w).Encode(user)
@@ -69,8 +68,10 @@ func checkNewUser(w http.ResponseWriter, r *http.Request) {
 	json.NewDecoder(r.Body).Decode(&user)
 	if user.FacebookID != "" {
 		err = collection.FindOne(context.Background(), bson.M{"facebookid": user.FacebookID}).Decode(&user)
-	} else {
+	} else if user.GoogleID != "" {
 		err = collection.FindOne(context.Background(), bson.M{"googleid": user.GoogleID}).Decode(&user)
+	} else {
+		err = collection.FindOne(context.Background(), bson.M{"email": user.Email}).Decode(&user)
 	}
 
 	if err == nil {
@@ -100,7 +101,7 @@ func createNewUser(w http.ResponseWriter, r *http.Request) {
 }
 
 type loginRequest struct {
-	ID	string	`json:"id"`
+	ID string `json:"id"`
 }
 
 func cookieLogin(w http.ResponseWriter, r *http.Request) {
