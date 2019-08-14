@@ -45,6 +45,8 @@ func main() {
 	router.HandleFunc("/api/login/e", emailLogin).Methods("POST")
 	router.HandleFunc("/api/users/", createNewUser).Methods("POST")
 	router.HandleFunc("/api/users/check", checkNewUser).Methods("POST")
+	router.HandleFunc("/api/users/{id}/wish", getAllWishlist).Methods("GET")
+	router.HandleFunc("/api/users/{id}/wish", addNewWishlist).Methods("POST")
 
 	log.Panic(http.ListenAndServe(":"+port, router))
 }

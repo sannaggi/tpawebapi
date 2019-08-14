@@ -7,8 +7,8 @@ type ReviewDetail struct {
 }
 
 type BasicReview struct {
-	UserID string  `json:"userid"`
-	Review string  `json:"review"`
+	UserID string `json:"userid"`
+	Review string `json:"review"`
 }
 
 type Amenity struct {
@@ -19,4 +19,11 @@ type Amenity struct {
 type Position struct {
 	Latitude  float64 `json:"latitude"`
 	Longitude float64 `json:"longitude"`
+}
+
+type Wishlist struct {
+	Name        string   `json:"name"`
+	Privacy     string   `json:"privacy"`
+	Stays       []string `json:"stays"`
+	Experiences []string `json:"experiences"`
 }
