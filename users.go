@@ -7,7 +7,6 @@ import (
 	"net/http"
 
 	j "github.com/dgrijalva/jwt-go"
-	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -156,44 +155,4 @@ func cookieLogin(w http.ResponseWriter, r *http.Request) {
 	tokenString := generateToken(user)
 
 	json.NewEncoder(w).Encode(tokenString)
-}
-
-func getAllWishlist(w http.ResponseWriter, r *http.Request) {
-	setupResponse(&w, r)
-	w.Header().Set("content-type", "application/json")
-	client := new(dbHandler).connect()
-	defer client.Disconnect(context.TODO())
-
-	params := mux.Vars(r)
-	id, err := primitive.ObjectIDFromHex(params["id"])
-	CheckErr(err)
-
-	collection := client.Database("tpaweb").Collection("user")
-
-	var user c.User
-
-	err = collection.FindOne(context.TODO(), bson.M{"_id": id}).Decode(&user)
-	CheckErr(err)
-
-	json.NewEncoder(w).Encode(user.Wishlists)
-}
-
-func addNewWishlist(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("content-type", "application/json")
-	setupResponse(&w, r)
-	client := new(dbHandler).connect()
-	defer client.Disconnect(context.TODO())
-
-	collection := client.Database("tpaweb").Collection("user")
-
-	var wishlist c.Wishlist
-
-	params := mux.Vars(r)
-	id, err := primitive.ObjectIDFromHex(params["id"])
-	CheckErr(err)
-
-	json.NewDecoder(r.Body).Decode(&wishlist)
-
-	_, err = collection.UpdateOne(context.Background(), bson.M{"_id": id}, bson.M{"$push": bson.M{"wishlists": wishlist}})
-	CheckErr(err)
 }

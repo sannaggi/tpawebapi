@@ -22,5 +22,4 @@ type User struct {
 	Review            []BasicReview      `json:"review"`
 	ResponseRate      float64            `json:"responserate"`
 	ResponseTime      int32              `json:"responsetime"`
-	Wishlists         []Wishlist         `json:"wishlist"`
 }
