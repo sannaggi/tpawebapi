@@ -8,6 +8,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func getUserWishlists(w http.ResponseWriter, r *http.Request) {
@@ -50,4 +51,22 @@ func addNewWishlist(w http.ResponseWriter, r *http.Request) {
 
 	_, err := collection.InsertOne(context.Background(), wishlist)
 	CheckErr(err)
+}
+
+func fetchWishlist(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-type", "application/json")
+	setupResponse(&w, r)
+	client := new(dbHandler).connect()
+	defer client.Disconnect(context.TODO())
+	params := mux.Vars(r)
+
+	collection := client.Database("tpaweb").Collection("wishlist")
+
+	var wishlist c.Wishlist
+	id, err := primitive.ObjectIDFromHex(params["id"])
+
+	err = collection.FindOne(context.Background(), bson.M{"_id": id}).Decode(&wishlist)
+	CheckErr(err)
+
+	json.NewEncoder(w).Encode(wishlist)
 }
