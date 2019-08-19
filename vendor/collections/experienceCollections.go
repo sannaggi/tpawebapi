@@ -7,13 +7,13 @@ import (
 type Experience struct {
 	ID            primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	Name          string             `json:"name"`
-	Price         float64			 `json:"price"`
+	Price         float64            `json:"price"`
 	Review        []ReviewDetail     `json:"rating"`
 	Category      string             `json:"category"`
 	HostID        string             `json:"hostid"`
 	AverageRating float64            `json:"averagerating"`
 	TotalRating   int                `json:"totalrating"`
-	Location      string             `json:"location"`
+	GeoLocation   string             `json:"geolocation"`
 	Duration      float64            `json:"duration"`
 	Amenities     []Amenity          `json:"amenities"`
 	HeaderImage   string             `json:"headerimage"`
@@ -24,4 +24,5 @@ type Experience struct {
 	Requirement   []string           `json:"requirement"`
 	Guests        int                `json:"guests"`
 	Languages     []string           `json:"languages"`
+	Location      Position           `json:"location"`
 }

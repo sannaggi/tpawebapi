@@ -4,7 +4,6 @@ import (
 	c "collections"
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -114,8 +113,6 @@ func getExperience(w http.ResponseWriter, r *http.Request) {
 
 	id, err := primitive.ObjectIDFromHex(params["id"])
 	CheckErr(err)
-
-	fmt.Println(id)
 
 	err = collection.FindOne(context.Background(), bson.M{"_id": id}).Decode(&experience)
 	CheckErr(err)
