@@ -48,6 +48,7 @@ func main() {
 	router.HandleFunc("/api/wishlist/u/{id}", getUserWishlists).Methods("GET")
 	router.HandleFunc("/api/wishlist/", addNewWishlist).Methods("POST")
 	router.HandleFunc("/api/wishlist/{id}", fetchWishlist).Methods("GET")
+	router.HandleFunc("/api/wishlist/{id}", addToWishlist).Methods("POST")
 
 	log.Panic(http.ListenAndServe(":"+port, router))
 }
