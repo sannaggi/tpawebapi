@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	j "github.com/dgrijalva/jwt-go"
+	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -155,4 +156,23 @@ func cookieLogin(w http.ResponseWriter, r *http.Request) {
 	tokenString := generateToken(user)
 
 	json.NewEncoder(w).Encode(tokenString)
+}
+
+func getUser(w http.ResponseWriter, r *http.Request) {
+	setupResponse(&w, r)
+	client := new(dbHandler).connect()
+	defer client.Disconnect(context.TODO())
+	w.Header().Set("content-type", "application/json")
+	params := mux.Vars(r)
+
+	var user c.User
+
+	collection := client.Database("tpaweb").Collection("user")
+
+	id, err := primitive.ObjectIDFromHex(params["id"])
+	CheckErr(err)
+
+	err = collection.FindOne(context.Background(), bson.M{"_id": id}).Decode(&user)
+	CheckErr(err)
+	json.NewEncoder(w).Encode(user)
 }

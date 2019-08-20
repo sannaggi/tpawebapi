@@ -43,6 +43,7 @@ func main() {
 	router.HandleFunc("/api/login/o", loginOauth2).Methods("POST")
 	router.HandleFunc("/api/login/c", cookieLogin).Methods("POST")
 	router.HandleFunc("/api/login/e", emailLogin).Methods("POST")
+	router.HandleFunc("/api/users/{id}", getUser).Methods("GET")
 	router.HandleFunc("/api/users/", createNewUser).Methods("POST")
 	router.HandleFunc("/api/users/check", checkNewUser).Methods("POST")
 	router.HandleFunc("/api/wishlist/u/{id}", getUserWishlists).Methods("GET")
