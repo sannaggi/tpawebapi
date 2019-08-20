@@ -4,7 +4,6 @@ import (
 	c "collections"
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -102,8 +101,30 @@ func addToWishlist(w http.ResponseWriter, r *http.Request) {
 	collection := client.Database("tpaweb").Collection("wishlist")
 
 	_, err = collection.UpdateOne(context.Background(), bson.M{"_id": wishlistID}, bson.M{"$push": bson.M{field: item.ID}})
-	if err != nil {
-		fmt.Println(err.Error())
+	CheckErr(err)
+}
+
+func removeFromWishlist(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-type", "application/json")
+	setupResponse(&w, r)
+	client := new(dbHandler).connect()
+	defer client.Disconnect(context.TODO())
+
+	params := mux.Vars(r)
+	wishlistID, err := primitive.ObjectIDFromHex(params["id"])
+
+	var item wishlistItem
+	json.NewDecoder(r.Body).Decode(&item)
+
+	var field string
+	if item.IsPlace == true {
+		field = "stays"
+	} else {
+		field = "experiences"
 	}
+
+	collection := client.Database("tpaweb").Collection("wishlist")
+
+	_, err = collection.UpdateOne(context.Background(), bson.M{"_id": wishlistID}, bson.M{"$pull": bson.M{field: item.ID}})
 	CheckErr(err)
 }
