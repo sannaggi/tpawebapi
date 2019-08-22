@@ -10,6 +10,8 @@ type Chat struct {
 	Starred  bool               `json:"starred"`
 	Archived bool               `json:"archived"`
 	Unread   bool               `json:"unread"`
+	Status   string             `json:"status"`
+	Price    float64            `json:"price"`
 	Messages []Message          `json:"messages"`
 }
 
