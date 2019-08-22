@@ -18,14 +18,22 @@ func getUserChat(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
 	params := mux.Vars(r)
 
-	var chat c.Chat
+	var chats []c.Chat
 
 	collection := client.Database("tpaweb").Collection("chat")
 
 	id := params["id"]
 
-	err := collection.FindOne(context.Background(), bson.M{"users": id}).Decode(&chat)
+	cursor, err := collection.Find(context.Background(), bson.M{"users": id})
 	CheckErr(err)
 
-	json.NewEncoder(w).Encode(chat)
+	CheckErr(err)
+
+	for cursor.Next(context.TODO()) {
+		var chat c.Chat
+		cursor.Decode(&chat)
+		chats = append(chats, chat)
+	}
+
+	json.NewEncoder(w).Encode(chats)
 }
