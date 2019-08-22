@@ -17,4 +17,5 @@ type Message struct {
 	SenderID string `json:"senderid"`
 	Type     string `json:"type"`
 	Content  string `json:"content"`
+	Time     string `json:"time"`
 }
