@@ -26,12 +26,47 @@
   revision = "2a8bb927dd31d8daada140a5d09578521ce5c36a"
 
 [[projects]]
+  digest = "1:6973c2e8119789f8600a3eb9af765c57ea27824f1789198597d701c01abbc013"
+  name = "github.com/googollee/go-engine.io"
+  packages = [
+    ".",
+    "base",
+    "packet",
+    "payload",
+    "transport",
+    "transport/polling",
+    "transport/websocket",
+  ]
+  pruneopts = "UT"
+  revision = "d1cac332336664ac940c0db96d83e9b181cd335c"
+  version = "v1.4.2"
+
+[[projects]]
+  digest = "1:06c5a9eb50bb0770781a7846856f0008b4e47b62e89c57bb4ddf6a1e1539a749"
+  name = "github.com/googollee/go-socket.io"
+  packages = [
+    ".",
+    "parser",
+  ]
+  pruneopts = "UT"
+  revision = "aa8a717234da5266c39e1211323266f397a3cb84"
+  version = "v1.4.2"
+
+[[projects]]
   digest = "1:cbec35fe4d5a4fba369a656a8cd65e244ea2c743007d8f6c1ccb132acf9d1296"
   name = "github.com/gorilla/mux"
   packages = ["."]
   pruneopts = "UT"
   revision = "00bdffe0f3c77e27d2cf6f5c70232a2d3e4d9c15"
   version = "v1.7.3"
+
+[[projects]]
+  digest = "1:7b5c6e2eeaa9ae5907c391a91c132abfd5c9e8a784a341b5625e750c67e6825d"
+  name = "github.com/gorilla/websocket"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "66b9c49e59c6c48f0ffce28c2d8b8a5678502c6d"
+  version = "v1.4.0"
 
 [[projects]]
   branch = "master"
@@ -124,6 +159,7 @@
   analyzer-version = 1
   input-imports = [
     "github.com/dgrijalva/jwt-go",
+    "github.com/googollee/go-socket.io",
     "github.com/gorilla/mux",
     "go.mongodb.org/mongo-driver/bson",
     "go.mongodb.org/mongo-driver/bson/primitive",

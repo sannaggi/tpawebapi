@@ -54,3 +54,7 @@
 [[constraint]]
   name = "github.com/dgrijalva/jwt-go"
   version = "3.2.0"
+
+[[constraint]]
+  name = "github.com/googollee/go-socket.io"
+  version = "1.4.2"

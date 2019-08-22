@@ -48,9 +48,10 @@ func main() {
 	router.HandleFunc("/api/users/check", checkNewUser).Methods("POST")
 	router.HandleFunc("/api/wishlist/u/{id}", getUserWishlists).Methods("GET")
 	router.HandleFunc("/api/wishlist/", addNewWishlist).Methods("POST")
+	router.HandleFunc("/api/wishlist/d/{id}", removeFromWishlist).Methods("POST")
 	router.HandleFunc("/api/wishlist/{id}", fetchWishlist).Methods("GET")
 	router.HandleFunc("/api/wishlist/{id}", addToWishlist).Methods("POST")
-	router.HandleFunc("/api/wishlist/d/{id}", removeFromWishlist).Methods("POST")
+	router.HandleFunc("/api/chat/u/{id}", getUserChat).Methods("GET")
 
 	log.Panic(http.ListenAndServe(":"+port, router))
 }
