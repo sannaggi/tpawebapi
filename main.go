@@ -53,6 +53,7 @@ func main() {
 	router.HandleFunc("/api/wishlist/{id}", addToWishlist).Methods("POST")
 	router.HandleFunc("/api/chat/u/{id}", getUserChat).Methods("GET")
 	router.HandleFunc("/api/chat/{id}", changeChatStatus).Methods("POST")
+	router.HandleFunc("/api/chat/{id}", getChat).Methods("GET")
 
 	log.Panic(http.ListenAndServe(":"+port, router))
 }

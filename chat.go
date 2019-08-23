@@ -62,3 +62,24 @@ func changeChatStatus(w http.ResponseWriter, r *http.Request) {
 	_, err = collection.UpdateOne(context.Background(), bson.M{"_id": id}, bson.M{"$set": bson.M{s.Status: s.Value}})
 	CheckErr(err)
 }
+
+func getChat(w http.ResponseWriter, r *http.Request) {
+	setupResponse(&w, r)
+
+	client := new(dbHandler).connect()
+	defer client.Disconnect(context.TODO())
+	w.Header().Set("content-type", "application/json")
+	params := mux.Vars(r)
+
+	var chat c.Chat
+
+	collection := client.Database("tpaweb").Collection("chat")
+
+	id, err := primitive.ObjectIDFromHex(params["id"])
+	CheckErr(err)
+
+	err = collection.FindOne(context.Background(), bson.M{"_id": id}).Decode(&chat)
+	CheckErr(err)
+
+	json.NewEncoder(w).Encode(chat)
+}
