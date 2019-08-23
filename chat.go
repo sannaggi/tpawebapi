@@ -24,7 +24,7 @@ func getUserChat(w http.ResponseWriter, r *http.Request) {
 
 	id := params["id"]
 
-	cursor, err := collection.Find(context.Background(), bson.M{"users": id, "archived": false})
+	cursor, err := collection.Find(context.Background(), bson.M{"users": id})
 	CheckErr(err)
 
 	CheckErr(err)
