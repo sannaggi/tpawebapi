@@ -83,3 +83,23 @@ func getChat(w http.ResponseWriter, r *http.Request) {
 
 	json.NewEncoder(w).Encode(chat)
 }
+
+func addNewMessage(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-type", "application/json")
+	setupResponse(&w, r)
+	client := new(dbHandler).connect()
+	defer client.Disconnect(context.TODO())
+	
+	params := mux.Vars(r)
+	id, err := primitive.ObjectIDFromHex(params["id"])
+	CheckErr(err)
+
+	collection := client.Database("tpaweb").Collection("chat")
+
+	var message c.Message
+
+	json.NewDecoder(r.Body).Decode(&message)
+
+	_, err = collection.UpdateOne(context.Background(), bson.M{"_id": id}, bson.M{"$push": bson.M{"messages": message}})
+	CheckErr(err)
+}
