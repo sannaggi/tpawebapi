@@ -7,6 +7,7 @@ import (
 type Chat struct {
 	ID       primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	Users    []string           `json:"users"`
+	Host     string             `json:"host"`
 	Starred  bool               `json:"starred"`
 	Archived bool               `json:"archived"`
 	Unread   bool               `json:"unread"`
