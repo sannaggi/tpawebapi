@@ -19,7 +19,7 @@ type User struct {
 	PreferredCurrency string             `json:"preferredcurrency"`
 	Description       string             `json:"description"`
 	SpokenLanguage    []string           `json:"spokenlanguage"`
-	Review            []BasicReview      `json:"review"`
+	Review            []ReviewDetail     `json:"review"`
 	ResponseRate      float64            `json:"responserate"`
 	ResponseTime      int32              `json:"responsetime"`
 }
