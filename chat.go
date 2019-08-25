@@ -89,7 +89,7 @@ func addNewMessage(w http.ResponseWriter, r *http.Request) {
 	setupResponse(&w, r)
 	client := new(dbHandler).connect()
 	defer client.Disconnect(context.TODO())
-	
+
 	params := mux.Vars(r)
 	id, err := primitive.ObjectIDFromHex(params["id"])
 	CheckErr(err)
@@ -101,5 +101,21 @@ func addNewMessage(w http.ResponseWriter, r *http.Request) {
 	json.NewDecoder(r.Body).Decode(&message)
 
 	_, err = collection.UpdateOne(context.Background(), bson.M{"_id": id}, bson.M{"$push": bson.M{"messages": message}})
+	CheckErr(err)
+}
+
+func createNewChat(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-type", "application/json")
+	setupResponse(&w, r)
+	client := new(dbHandler).connect()
+	defer client.Disconnect(context.TODO())
+
+	collection := client.Database("tpaweb").Collection("chat")
+
+	var chat c.Chat
+	json.NewDecoder(r.Body).Decode(&chat)
+	chat.Messages = []c.Message{}
+
+	_, err := collection.InsertOne(context.Background(), chat)
 	CheckErr(err)
 }

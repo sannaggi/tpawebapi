@@ -55,6 +55,7 @@ func main() {
 	router.HandleFunc("/api/chat/{id}", changeChatStatus).Methods("POST")
 	router.HandleFunc("/api/chat/{id}", getChat).Methods("GET")
 	router.HandleFunc("/api/chat/m/{id}", addNewMessage).Methods("POST")
+	router.HandleFunc("/api/chat", createNewChat).Methods("POST")
 
 	log.Panic(http.ListenAndServe(":"+port, router))
 }
