@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"fmt"
 
 	"go.mongodb.org/mongo-driver/mongo/options"
 
@@ -100,8 +101,9 @@ func addNewMessage(w http.ResponseWriter, r *http.Request) {
 
 	var message c.Message
 
+	fmt.Println(r.Body)
 	json.NewDecoder(r.Body).Decode(&message)
-
+	fmt.Println(message)
 	_, err = collection.UpdateOne(context.Background(), bson.M{"_id": id}, bson.M{"$push": bson.M{"messages": message}})
 	CheckErr(err)
 }
@@ -135,6 +137,7 @@ func createNewChat(w http.ResponseWriter, r *http.Request) {
 	collection := client.Database("tpaweb").Collection("chat")
 
 	var chat c.Chat
+
 	json.NewDecoder(r.Body).Decode(&chat)
 	chat.Messages = []c.Message{}
 
