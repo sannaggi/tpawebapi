@@ -106,6 +106,26 @@ func addNewMessage(w http.ResponseWriter, r *http.Request) {
 	CheckErr(err)
 }
 
+func getSpecificChat(w http.ResponseWriter, r *http.Request) {
+	setupResponse(&w, r)
+
+	client := new(dbHandler).connect()
+	defer client.Disconnect(context.TODO())
+	w.Header().Set("content-type", "application/json")
+
+	var cu []string
+	var chat c.Chat
+
+	json.NewDecoder(r.Body).Decode(&cu)
+
+	collection := client.Database("tpaweb").Collection("chat")
+
+	err := collection.FindOne(context.Background(), bson.M{"users": bson.M{"$all": cu}}).Decode(&chat)
+	CheckErr(err)
+
+	json.NewEncoder(w).Encode(chat)
+}
+
 func createNewChat(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
 	setupResponse(&w, r)
