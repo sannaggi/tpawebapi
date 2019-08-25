@@ -6,6 +6,8 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"go.mongodb.org/mongo-driver/mongo/options"
+
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -116,6 +118,6 @@ func createNewChat(w http.ResponseWriter, r *http.Request) {
 	json.NewDecoder(r.Body).Decode(&chat)
 	chat.Messages = []c.Message{}
 
-	_, err := collection.InsertOne(context.Background(), chat)
+	_, err := collection.UpdateOne(context.Background(), bson.M{"users": bson.M{"$all": []bson.M{bson.M{"$elemMatch": bson.M{"$eq": chat.Users[0]}}, bson.M{"$elemMatch": bson.M{"$eq": chat.Users[1]}}}}}, bson.M{"$set": chat}, options.Update().SetUpsert(true))
 	CheckErr(err)
 }
