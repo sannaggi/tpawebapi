@@ -141,6 +141,6 @@ func createNewChat(w http.ResponseWriter, r *http.Request) {
 	json.NewDecoder(r.Body).Decode(&chat)
 	chat.Messages = []c.Message{}
 
-	_, err := collection.UpdateOne(context.Background(), bson.M{"users": bson.M{"$all": []bson.M{bson.M{"$elemMatch": bson.M{"$eq": chat.Users[0]}}, bson.M{"$elemMatch": bson.M{"$eq": chat.Users[1]}}}}}, bson.M{"$set": chat}, options.Update().SetUpsert(true))
+	_, err := collection.UpdateOne(context.Background(), bson.M{"users": bson.M{"$all": []bson.M{bson.M{"$elemMatch": bson.M{"$eq": chat.Users[0]}}, bson.M{"$elemMatch": bson.M{"$eq": chat.Users[1]}}}}}, bson.M{"$setOnInsert": chat}, options.Update().SetUpsert(true))
 	CheckErr(err)
 }
