@@ -6,8 +6,11 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/go-redis/redis"
 	"github.com/gorilla/mux"
 )
+
+var redisClient *redis.Client
 
 func CheckErr(err error) {
 	if err != nil {
@@ -22,7 +25,21 @@ func setupResponse(w *http.ResponseWriter, r *http.Request) {
 	(*w).Header().Set("Access-Control-Allow-Credentials", "true")
 }
 
+func newRedisClient() *redis.Client {
+	client := redis.NewClient(&redis.Options{
+		Addr:     ":6379",
+		Password: "",
+		DB:       0,
+	})
+	pong, err := client.Ping().Result()
+	fmt.Println(pong, err)
+	return client
+}
+
 func main() {
+
+	redisClient = newRedisClient()
+	fmt.Println(redisClient)
 
 	port := os.Getenv("PORT")
 	if port == "" {

@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"sort"
 	"strings"
@@ -44,5 +45,14 @@ func getSearchResults(w http.ResponseWriter, r *http.Request) {
 		results = results[0:5]
 	}
 
+	fmt.Println("src-" + query)
+	err := redisClient.Set("src-"+query, results, 1800).Err()
+	CheckErr(err)
+
+	val, err := redisClient.Get("src-" + query).Result()
+	if err == nil {
+		fmt.Println(err)
+	}
+	fmt.Println(val)
 	json.NewEncoder(w).Encode(results)
 }
