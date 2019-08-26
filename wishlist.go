@@ -128,3 +128,22 @@ func removeFromWishlist(w http.ResponseWriter, r *http.Request) {
 	_, err = collection.UpdateOne(context.Background(), bson.M{"_id": wishlistID}, bson.M{"$pull": bson.M{field: item.ID}})
 	CheckErr(err)
 }
+
+func fetchPublicWishlists(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-type", "application/json")
+	setupResponse(&w, r)
+	client := new(dbHandler).connect()
+	defer client.Disconnect(context.TODO())
+
+	var wishlists []c.Wishlist
+	collection := client.Database("tpaweb").Collection("wishlist")
+	cursor, err := collection.Aggregate(context.Background(), []bson.M{bson.M{"$match": bson.M{"privacy":"public"}}, bson.M{"$limit": 6}})
+	CheckErr(err)
+
+	for cursor.Next(context.TODO()) {
+		var wishlist c.Wishlist
+		cursor.Decode(&wishlist)
+		wishlists = append(wishlists, wishlist)
+	}
+	json.NewEncoder(w).Encode(wishlists)
+}
