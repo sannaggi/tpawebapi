@@ -4,6 +4,7 @@ import (
 	c "collections"
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -52,6 +53,10 @@ func getUserBookings(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(bookings)
 }
 
+type bookingStatus struct {
+	Status string `json:"status"`
+}
+
 func changeBooking(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
 	setupResponse(&w, r)
@@ -61,11 +66,13 @@ func changeBooking(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id, err := primitive.ObjectIDFromHex(params["id"])
 
-	var status string
+	var status bookingStatus
+	fmt.Println(r.Body)
 	json.NewDecoder(r.Body).Decode(&status)
+	fmt.Println(status.Status)
 
 	collection := client.Database("tpaweb").Collection("booking")
 
-	_, err = collection.UpdateOne(context.Background(), bson.M{"_id": id}, bson.M{"$set": bson.M{"status": status}})
+	_, err = collection.UpdateOne(context.Background(), bson.M{"_id": id}, bson.M{"$set": bson.M{"status": status.Status}})
 	CheckErr(err)
 }
