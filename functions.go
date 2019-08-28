@@ -19,6 +19,7 @@ type data struct {
 	AverageRating float64            `json:"averagerating"`
 	RatingCount   int                `json:"ratingcount"`
 	Images        string             `json:"image"`
+	HostID        string             `json:"hostid"`
 }
 
 type kv struct {

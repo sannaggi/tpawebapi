@@ -80,6 +80,7 @@ func searchPlaceByName(query string) []data {
 			place.AverageRating,
 			place.RatingCount,
 			place.Images[0],
+			place.HostID,
 		})
 	}
 
