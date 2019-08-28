@@ -52,7 +52,7 @@ func getUserBookings(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(bookings)
 }
 
-func cancelBooking(w http.ResponseWriter, r *http.Request) {
+func changeBooking(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
 	setupResponse(&w, r)
 	client := new(dbHandler).connect()
@@ -61,8 +61,11 @@ func cancelBooking(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id, err := primitive.ObjectIDFromHex(params["id"])
 
+	var status string
+	json.NewDecoder(r.Body).Decode(&status)
+
 	collection := client.Database("tpaweb").Collection("booking")
 
-	_, err = collection.UpdateOne(context.Background(), bson.M{"_id": id}, bson.M{"$set": bson.M{"status": "canceled"}})
+	_, err = collection.UpdateOne(context.Background(), bson.M{"_id": id}, bson.M{"$set": bson.M{"status": status}})
 	CheckErr(err)
 }
