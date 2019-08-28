@@ -67,9 +67,7 @@ func changeBooking(w http.ResponseWriter, r *http.Request) {
 	id, err := primitive.ObjectIDFromHex(params["id"])
 
 	var status bookingStatus
-	fmt.Println(r.Body)
 	json.NewDecoder(r.Body).Decode(&status)
-	fmt.Println(status.Status)
 
 	collection := client.Database("tpaweb").Collection("booking")
 
