@@ -76,6 +76,7 @@ func main() {
 	router.HandleFunc("/api/chat/s/spec", getSpecificChat).Methods("POST")
 	router.HandleFunc("/api/chat", createNewChat).Methods("POST")
 	router.HandleFunc("/api/booking", addNewBooking).Methods("POST")
+	router.HandleFunc("/api/booking/u/{id}", getUserBookings).Methods("GET")
 
 	log.Panic(http.ListenAndServe(":"+port, router))
 }
