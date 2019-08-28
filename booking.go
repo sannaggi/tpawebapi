@@ -8,6 +8,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func addNewBooking(w http.ResponseWriter, r *http.Request) {
@@ -49,4 +50,19 @@ func getUserBookings(w http.ResponseWriter, r *http.Request) {
 	}
 
 	json.NewEncoder(w).Encode(bookings)
+}
+
+func cancelBooking(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-type", "application/json")
+	setupResponse(&w, r)
+	client := new(dbHandler).connect()
+	defer client.Disconnect(context.TODO())
+
+	params := mux.Vars(r)
+	id, err := primitive.ObjectIDFromHex(params["id"])
+
+	collection := client.Database("tpaweb").Collection("booking")
+
+	_, err = collection.UpdateOne(context.Background(), bson.M{"_id": id}, bson.M{"$set": bson.M{"status": "canceled"}})
+	CheckErr(err)
 }
