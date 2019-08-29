@@ -78,6 +78,7 @@ func main() {
 	router.HandleFunc("/api/booking", addNewBooking).Methods("POST")
 	router.HandleFunc("/api/booking/u/{id}", getUserBookings).Methods("GET")
 	router.HandleFunc("/api/booking/c/{id}", changeBooking).Methods("POST")
+	router.HandleFunc("/api/booking/{id}", setRating).Methods("POST")
 
 	log.Panic(http.ListenAndServe(":"+port, router))
 }

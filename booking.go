@@ -11,6 +11,15 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+type bookingStatus struct {
+	Status string `json:"status"`
+}
+
+type rating struct {
+	Type   string  `json:"type"`
+	Rating float64 `json:"rating"`
+}
+
 func addNewBooking(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
 	setupResponse(&w, r)
@@ -52,10 +61,6 @@ func getUserBookings(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(bookings)
 }
 
-type bookingStatus struct {
-	Status string `json:"status"`
-}
-
 func changeBooking(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
 	setupResponse(&w, r)
@@ -71,5 +76,23 @@ func changeBooking(w http.ResponseWriter, r *http.Request) {
 	collection := client.Database("tpaweb").Collection("booking")
 
 	_, err = collection.UpdateOne(context.Background(), bson.M{"_id": id}, bson.M{"$set": bson.M{"status": status.Status}})
+	CheckErr(err)
+}
+
+func setRating(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-type", "application/json")
+	setupResponse(&w, r)
+	client := new(dbHandler).connect()
+	defer client.Disconnect(context.TODO())
+
+	params := mux.Vars(r)
+	id, err := primitive.ObjectIDFromHex(params["id"])
+
+	var rating rating
+	json.NewDecoder(r.Body).Decode(&rating)
+
+	collection := client.Database("tpaweb").Collection("booking")
+
+	_, err = collection.UpdateOne(context.Background(), bson.M{"_id": id}, bson.M{"$set": bson.M{rating.Type: rating.Rating}})
 	CheckErr(err)
 }
