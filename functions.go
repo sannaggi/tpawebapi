@@ -2,9 +2,11 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"sort"
 	"strings"
+	"time"
 
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -33,17 +35,11 @@ func getSearchResults(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	query := params["query"]
 
-	// val, err := redisClient.Get("src-" + query).Result()
-	// if err == nil {
-	// 	var redisData data
-	// 	fmt.Println([]byte(val))
-	// 	err = json.Unmarshal([]byte(val), &redisData)
-	// 	// CheckErr(err)
-	// 	// fmt.Println(val)
-	// 	// fmt.Println()
-	// 	json.NewEncoder(w).Encode(redisData)
-	// 	return
-	// }
+	val, err := redisClient.Get("src-" + query).Result()
+	if err == nil {
+		fmt.Fprintf(w, "%s", val)
+		return
+	}
 
 	var results []data
 	results = append(results, searchPlaceByName(query)...)
@@ -57,19 +53,11 @@ func getSearchResults(w http.ResponseWriter, r *http.Request) {
 		results = results[0:5]
 	}
 
-	// fmt.Println(results)
-	// fmt.Println()
-	// out, err := json.Marshal(results)
-	// CheckErr(err)
-	// fmt.Println(out)
-	// fmt.Println()
-	// fmt.Println(string(out))
-	// fmt.Println()
+	out, err := json.Marshal(results)
+	CheckErr(err)
 
-	// err = redisClient.Set("src-"+query, out, time.Minute*30).Err()
-	// CheckErr(err)
-
-	// fmt.Println(results)
+	err = redisClient.Set("src-"+query, out, time.Minute*30).Err()
+	CheckErr(err)
 
 	json.NewEncoder(w).Encode(results)
 }
