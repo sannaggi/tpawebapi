@@ -61,6 +61,8 @@ func searchExperienceByName(query string) []data {
 			experience.TotalRating,
 			experience.HeaderImage,
 			experience.HostID,
+			experience.Duration,
+			experience.Amenities,
 		})
 	}
 

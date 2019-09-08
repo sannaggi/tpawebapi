@@ -81,6 +81,8 @@ func searchPlaceByName(query string) []data {
 			place.RatingCount,
 			place.Images[0],
 			place.HostID,
+			0,
+			nil,
 		})
 	}
 

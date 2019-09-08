@@ -1,6 +1,7 @@
 package main
 
 import (
+	c "collections"
 	"encoding/json"
 	"net/http"
 	"sort"
@@ -20,6 +21,8 @@ type data struct {
 	RatingCount   int                `json:"ratingcount"`
 	Images        string             `json:"image"`
 	HostID        string             `json:"hostid"`
+	Duration      float64            `json:"duration"`
+	Amenities     []c.Amenity        `json:"amenities"`
 }
 
 type kv struct {
